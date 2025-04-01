@@ -1,0 +1,305 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="oj-table">
+               <colgroup><col width="14%">
+               <col width="23%">
+               <col width="63%">
+               </colgroup><tbody>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-hdr">(1)</p>
+                     </td>
+                     <td valign="top" class="oj-table" colspan="2">
+                        <p class="oj-tbl-hdr">(2)</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-hdr">FCM substance No</p>
+                     </td>
+                     <td valign="top" class="oj-table" colspan="2">
+                        <p class="oj-tbl-hdr">Detailed specification on the substance</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">744</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Definition</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">The copolymers are produced by the controlled fermentation of Alcaligenes eutrophus using mixtures of glucose and propanoic acid as carbon sources. The organism used has not been genetically engineered and has been derived from a single wildtype organism Alcaligenes eutrophus strain H16 NCIMB 10442. Master stocks of the organism are stored as freeze-dried ampoules. A submaster/working stock is prepared from the master stock and stored in liquid nitrogen and used to prepare inocula for the fermenter. Fermenter samples will be examined daily both microscopically and for any changes in colonial morphology on a variety of agars at different temperatures. The copolymers are isolated from heat treatment bacteria by controlled digestion of the other cellular components, washing and drying. These copolymers are normally offered as formulated, melt formed granules containing additives such as nucleating agents, plasticisers, fillers, stabilisers and pigments which all conform to the general and individual specifications</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Chemical name</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Poly(3-D-hydroxybutanoate-co-3-D-hydroxypentanoate)</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">CAS number</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">0080181-31-3</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Structural formula</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-image">
+                           </p><figure>
+                              <img src="data:image/jpg;base64,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" height="34" width="56.5" alt="Image 1" class="oj-img">
+                           </figure>
+                        <p></p>
+                        <p class="oj-tbl-txt">where n/(m&nbsp;+&nbsp;n) greater than 0 and less or equal to 0,25</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Average molecular weight</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-num">Not less than 150&nbsp;000  Daltons (measured by gel permeation chromatography)</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Assay</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Not less than 98&nbsp;% poly(3-D-hydroxybutanoate-co-3-D-hydoxy-pentanoate) analysed after hydrolysis as a mixture of 3-D-hydro-xybutanoic and 3-D-hydroxypentanoic acids</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Description</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">White to off-white powder after isolation</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Characteristics</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Identification tests:</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Solubility</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Soluble in chlorinated hydrocarbons such as chloroform or dichloromethane but practically insoluble in ethanol, aliphatic alkanes and water</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Restriction</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">QMA for crotonic acid is 0,05&nbsp;mg/6 dm<span class="oj-super">2</span>
+                        </p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Purity</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Prior to granulation the raw material copolymer powder must contain:</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                           <colgroup><col width="4%">
+                           <col width="96%">
+                           </colgroup><tbody>
+                              <tr>
+                                 <td valign="top">
+                                    <p class="oj-normal">—</p>
+                                 </td>
+                                 <td valign="top">
+                                    <p class="oj-normal">nitrogen,</p>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-num">Not more than 2&nbsp;500  mg/kg of plastic</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                           <colgroup><col width="4%">
+                           <col width="96%">
+                           </colgroup><tbody>
+                              <tr>
+                                 <td valign="top">
+                                    <p class="oj-normal">—</p>
+                                 </td>
+                                 <td valign="top">
+                                    <p class="oj-normal">zinc,</p>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Not more than 100 mg/kg of plastic</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                           <colgroup><col width="4%">
+                           <col width="96%">
+                           </colgroup><tbody>
+                              <tr>
+                                 <td valign="top">
+                                    <p class="oj-normal">—</p>
+                                 </td>
+                                 <td valign="top">
+                                    <p class="oj-normal">copper,</p>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Not more than 5 mg/kg of plastic</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                           <colgroup><col width="4%">
+                           <col width="96%">
+                           </colgroup><tbody>
+                              <tr>
+                                 <td valign="top">
+                                    <p class="oj-normal">—</p>
+                                 </td>
+                                 <td valign="top">
+                                    <p class="oj-normal">lead,</p>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Not more than 2 mg/kg of plastic</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                           <colgroup><col width="4%">
+                           <col width="96%">
+                           </colgroup><tbody>
+                              <tr>
+                                 <td valign="top">
+                                    <p class="oj-normal">—</p>
+                                 </td>
+                                 <td valign="top">
+                                    <p class="oj-normal">arsenic,</p>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Not more than 1 mg/kg of plastic</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-normal">&nbsp;</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                           <colgroup><col width="4%">
+                           <col width="96%">
+                           </colgroup><tbody>
+                              <tr>
+                                 <td valign="top">
+                                    <p class="oj-normal">—</p>
+                                 </td>
+                                 <td valign="top">
+                                    <p class="oj-normal">chromium,</p>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Not more than 1 mg/kg of plastic</p>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
