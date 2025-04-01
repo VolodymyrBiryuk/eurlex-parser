@@ -79,6 +79,7 @@ def parse_annexes(soup) -> list:
                 annex_content += cleaned_text
 
         annex_text = annex_text.lstrip('\n').rstrip('\n').replace('\n\n\n', '\n')
+        annex_content = annex_content.lstrip('\n').rstrip('\n').replace('\n\n\n', '\n')
         annex_data['id'] = annex_id
         annex_data['title'] = annex_title
         annex_data['text'] = annex_text
