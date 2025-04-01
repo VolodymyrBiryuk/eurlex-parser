@@ -17,7 +17,7 @@ def html_table_to_markdown(markup: str) -> str:
     lines = markdown.split('\n')
     # Filter out lines that don't contain any actual content.
     valid_lines = [line for line in lines if re.search(r'[A-Za-z0-9]', line)]
-    markdown_cleaned = '\n'.join(valid_lines)
+    markdown_cleaned = '\n'.join(valid_lines).strip()
     return markdown_cleaned
 
 
