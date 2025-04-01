@@ -1,0 +1,63 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="oj-table">
+               <colgroup><col width="71%">
+               <col width="29%">
+               </colgroup><tbody>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-hdr">Food simulant</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-hdr">Abbreviation</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Ethanol 10&nbsp;% (v/v)</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Food simulant A</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Acetic acid 3&nbsp;% (w/v)</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Food simulant B</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Ethanol 20&nbsp;% (v/v)</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Food simulant C</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Ethanol 50&nbsp;% (v/v)</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Food simulant D1</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Vegetable oil<a id="ntc*1-L_2011012EN.01007501-E0001" href="#ntr*1-L_2011012EN.01007501-E0001">&nbsp;(<span class="oj-super oj-note-tag">*1</span>)</a>
+                        </p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Food simulant D2</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">poly(2,6-diphenyl-p-phenylene oxide), particle size 60-80 mesh, pore size 200&nbsp;nm</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">Food simulant E</p>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>

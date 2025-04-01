@@ -62,7 +62,7 @@ def parse_annexes(soup):
             elif c.name == 'p' and "ti-grseq-1" in str(c.get('class')) and not annex_title:
                 annex_title = c.text.strip()
             elif c.name == 'table' and "table" in str(c.get('class')):
-                annex_table = html_table_to_markdown(str(c))                
+                annex_table = html_table_to_markdown(str(c))
             else:                                                
                 annex_text += clean_text(c.text)
         

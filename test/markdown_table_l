@@ -1,0 +1,601 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="oj-table">
+               <colgroup><col width="12%">
+               <col width="44%">
+               <col width="11%">
+               <col width="33%">
+               </colgroup><tbody>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">(1)</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">(2)</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">(3)</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">(4)</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-hdr">Group Restriction No</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-hdr">FCM substance No</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-hdr">SML (T)</p>
+                        <p class="oj-tbl-hdr">[mg/kg]</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-hdr">Group restriction specification</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">1</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">128</p>
+                        <p class="oj-tbl-txt">211</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">6</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as acetaldehyde</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">2</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">89</p>
+                        <p class="oj-tbl-txt">227</p>
+                        <p class="oj-tbl-txt">263</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">30</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as ethyleneglycol</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">3</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">234</p>
+                        <p class="oj-tbl-txt">248</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">30</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as maleic acid</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">4</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">212</p>
+                        <p class="oj-tbl-txt">435</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">15</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as caprolactam</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">5</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">137</p>
+                        <p class="oj-tbl-txt">472</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">3</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as the sum of the substances</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">6</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">412</p>
+                        <p class="oj-tbl-txt">512</p>
+                        <p class="oj-tbl-txt">513</p>
+                        <p class="oj-tbl-txt">588</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">1</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as iodine</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">7</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">19</p>
+                        <p class="oj-tbl-txt">20</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">1,2</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as tertiary amine</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">8</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">317</p>
+                        <p class="oj-tbl-txt">318</p>
+                        <p class="oj-tbl-txt">319</p>
+                        <p class="oj-tbl-txt">359</p>
+                        <p class="oj-tbl-txt">431</p>
+                        <p class="oj-tbl-txt">464</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">6</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as the sum of the substances</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">9</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">650</p>
+                        <p class="oj-tbl-txt">695</p>
+                        <p class="oj-tbl-txt">697</p>
+                        <p class="oj-tbl-txt">698</p>
+                        <p class="oj-tbl-txt">726</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">0,18</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as tin</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">10</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">28</p>
+                        <p class="oj-tbl-txt">29</p>
+                        <p class="oj-tbl-txt">30</p>
+                        <p class="oj-tbl-txt">31</p>
+                        <p class="oj-tbl-txt">32</p>
+                        <p class="oj-tbl-txt">33</p>
+                        <p class="oj-tbl-txt">466</p>
+                        <p class="oj-tbl-txt">582</p>
+                        <p class="oj-tbl-txt">618</p>
+                        <p class="oj-tbl-txt">619</p>
+                        <p class="oj-tbl-txt">620</p>
+                        <p class="oj-tbl-txt">646</p>
+                        <p class="oj-tbl-txt">676</p>
+                        <p class="oj-tbl-txt">736</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">0,006</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as tin</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">11</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">66</p>
+                        <p class="oj-tbl-txt">645</p>
+                        <p class="oj-tbl-txt">657</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">1,2</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as tin</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">12</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">444</p>
+                        <p class="oj-tbl-txt">469</p>
+                        <p class="oj-tbl-txt">470</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">30</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as the sum of the substances</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">13</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">163</p>
+                        <p class="oj-tbl-txt">285</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">1,5</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as the sum of the substances</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">14</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">294</p>
+                        <p class="oj-tbl-txt">368</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">5</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as the sum of the substances</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">15</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">98</p>
+                        <p class="oj-tbl-txt">196</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">15</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as formaldehyde</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">16</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">407</p>
+                        <p class="oj-tbl-txt">583</p>
+                        <p class="oj-tbl-txt">584</p>
+                        <p class="oj-tbl-txt">599</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">6</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as boron</p>
+                        <p class="oj-tbl-txt">Without prejudice to the provisions of Directive 98/83/EC</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">17</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">4</p>
+                        <p class="oj-tbl-txt">167</p>
+                        <p class="oj-tbl-txt">169</p>
+                        <p class="oj-tbl-txt">198</p>
+                        <p class="oj-tbl-txt">274</p>
+                        <p class="oj-tbl-txt">354</p>
+                        <p class="oj-tbl-txt">372</p>
+                        <p class="oj-tbl-txt">460</p>
+                        <p class="oj-tbl-txt">461</p>
+                        <p class="oj-tbl-txt">475</p>
+                        <p class="oj-tbl-txt">476</p>
+                        <p class="oj-tbl-txt">485</p>
+                        <p class="oj-tbl-txt">490</p>
+                        <p class="oj-tbl-txt">653</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">ND</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as isocyanate moiety</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">18</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">705</p>
+                        <p class="oj-tbl-txt">733</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">0,05</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as the sum of the substances</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">19</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">505</p>
+                        <p class="oj-tbl-txt">516</p>
+                        <p class="oj-tbl-txt">519</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">10</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as SO<span class="oj-sub">2</span>
+                        </p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">20</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">290</p>
+                        <p class="oj-tbl-txt">386</p>
+                        <p class="oj-tbl-txt">390</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">30</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as the sum of the substances</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">21</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">347</p>
+                        <p class="oj-tbl-txt">349</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">5</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as trimellitic acid</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">22</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">70</p>
+                        <p class="oj-tbl-txt">147</p>
+                        <p class="oj-tbl-txt">176</p>
+                        <p class="oj-tbl-txt">218</p>
+                        <p class="oj-tbl-txt">323</p>
+                        <p class="oj-tbl-txt">325</p>
+                        <p class="oj-tbl-txt">365</p>
+                        <p class="oj-tbl-txt">371</p>
+                        <p class="oj-tbl-txt">380</p>
+                        <p class="oj-tbl-txt">425</p>
+                        <p class="oj-tbl-txt">446</p>
+                        <p class="oj-tbl-txt">448</p>
+                        <p class="oj-tbl-txt">456</p>
+                        <p class="oj-tbl-txt">636</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">6</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as acrylic acid</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">23</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">150</p>
+                        <p class="oj-tbl-txt">156</p>
+                        <p class="oj-tbl-txt">181</p>
+                        <p class="oj-tbl-txt">183</p>
+                        <p class="oj-tbl-txt">184</p>
+                        <p class="oj-tbl-txt">355</p>
+                        <p class="oj-tbl-txt">370</p>
+                        <p class="oj-tbl-txt">374</p>
+                        <p class="oj-tbl-txt">439</p>
+                        <p class="oj-tbl-txt">440</p>
+                        <p class="oj-tbl-txt">447</p>
+                        <p class="oj-tbl-txt">457</p>
+                        <p class="oj-tbl-txt">482</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">6</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as methacrylic acid</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">24</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">756</p>
+                        <p class="oj-tbl-txt">758</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">5</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as the sum of the substances</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">25</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">720</p>
+                        <p class="oj-tbl-txt">747</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">0,05</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">sum of mono-n-dodecyltin tris(isooctylmercaptoacetate), di-n-dodecyltin bis(isooctyl mercaptoacetate), mono-dodecyltin trichloride and di-dodecyltin dichloride) expressed as the sum of mono- and di-dodecyltin chloride</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">26</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">728</p>
+                        <p class="oj-tbl-txt">729</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">9</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as the sum of the substances</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">27</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">188</p>
+                        <p class="oj-tbl-txt">291</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">5</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as isophthalic acid</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">28</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">191</p>
+                        <p class="oj-tbl-txt">192</p>
+                        <p class="oj-tbl-txt">785</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">7,5</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as terephthalic acid</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">29</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">342</p>
+                        <p class="oj-tbl-txt">672</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">0,05</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as the sum of 6-hydroxyhexanoic acid and caprolactone</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">30</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">254</p>
+                        <p class="oj-tbl-txt">672</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">5</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as 1,4-butanediol</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">31</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">73</p>
+                        <p class="oj-tbl-txt">797</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">30</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as the sum of the substances</p>
+                     </td>
+                  </tr>
+                  <tr class="oj-table">
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">32</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">8</p>
+                        <p class="oj-tbl-txt">72</p>
+                        <p class="oj-tbl-txt">73</p>
+                        <p class="oj-tbl-txt">138</p>
+                        <p class="oj-tbl-txt">140</p>
+                        <p class="oj-tbl-txt">157</p>
+                        <p class="oj-tbl-txt">159</p>
+                        <p class="oj-tbl-txt">207</p>
+                        <p class="oj-tbl-txt">242</p>
+                        <p class="oj-tbl-txt">283</p>
+                        <p class="oj-tbl-txt">532</p>
+                        <p class="oj-tbl-txt">670</p>
+                        <p class="oj-tbl-txt">728</p>
+                        <p class="oj-tbl-txt">729</p>
+                        <p class="oj-tbl-txt">775</p>
+                        <p class="oj-tbl-txt">783</p>
+                        <p class="oj-tbl-txt">797</p>
+                        <p class="oj-tbl-txt">798</p>
+                        <p class="oj-tbl-txt">810</p>
+                        <p class="oj-tbl-txt">815</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">60</p>
+                     </td>
+                     <td valign="top" class="oj-table">
+                        <p class="oj-tbl-txt">expressed as the sum of the substances</p>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
