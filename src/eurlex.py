@@ -64,22 +64,54 @@ def parse_annexes(soup) -> list:
         annex_table = ''
         annex_content = ''
         for c in div.children:
-            if c.name == 'p' and "doc-ti" in str(c.get('class')):
+            if c.text.isspace():
+                # Skip empty tags
+                continue
+            elif c.name == 'p' and "doc-ti" in str(c.get('class')):
                 annex_id = c.text.strip()
             elif c.name == 'p' and "ti-grseq-1" in str(c.get('class')) and not annex_title:
                 annex_title = c.text.strip()
                 annex_content += annex_title
+            elif c.name == 'table' and "table" not in str(c.get('class')):
+                markdown_table = html_table_to_markdown(str(c))
+                # Tables without a class are not really tables, but sub-paragraphs
+                # and should not have vertical separators
+                markdown_table = markdown_table.replace('| ', '')
+                annex_table = markdown_table
+                annex_content += markdown_table
             elif c.name == 'table' and "table" in str(c.get('class')):
                 markdown_table = html_table_to_markdown(str(c))
                 annex_table = markdown_table
-                annex_content += '\n' + markdown_table + '\n'
+                annex_content += '\n' + markdown_table
+            elif c.name == 'p' and "oj-normal" in str(c.get('class')):
+                cleaned_text = clean_text(c.text)
+                annex_text += cleaned_text
+                annex_content += cleaned_text
+            elif c.name == 'p' and "oj-ti-grseq-1" in str(c.get('class')):
+                cleaned_text = clean_text(c.text)
+                annex_text += cleaned_text
+                annex_content += '\n\n' + cleaned_text
+            elif c.name == 'p' and "oj-ti-tbl" in str(c.get('class')):
+                cleaned_text = clean_text(c.text)
+                annex_text += cleaned_text
+                if c.get('id'):
+                    cleaned_text = '\n\n' + cleaned_text
+                annex_content += cleaned_text
+            elif c.name == 'hr' and "oj-note" in str(c.get('class')):
+                cleaned_text = clean_text(c.text)
+                annex_text += cleaned_text
+                annex_content += '\n\n'
+            elif c.name == 'p' and "oj-note" in str(c.get('class')):
+                cleaned_text = clean_text(c.text)
+                annex_text += cleaned_text
+                annex_content += cleaned_text.strip()
             else:
                 cleaned_text = clean_text(c.text)
                 annex_text += cleaned_text
                 annex_content += cleaned_text
 
         annex_text = annex_text.lstrip('\n').rstrip('\n').replace('\n\n\n', '\n')
-        annex_content = annex_content.lstrip('\n').rstrip('\n').replace('\n\n\n', '\n')
+        annex_content = annex_content.lstrip().rstrip()
         annex_data['id'] = annex_id
         annex_data['title'] = annex_title
         annex_data['text'] = annex_text
