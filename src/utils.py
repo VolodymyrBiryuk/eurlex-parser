@@ -1,7 +1,40 @@
 import re
 from typing import List
 
+from bs4 import BeautifulSoup
 from markdownify import markdownify as md
+
+
+def detect_language(soup: BeautifulSoup) -> str:
+    try:
+        language_tag = soup.find('p', class_='oj-hd-lg')
+        language = language_tag.text
+    except AttributeError:
+        try:
+            language_tag = soup.find('p', class_='hd-lg')
+            language = language_tag.text
+        except AttributeError:
+            raise ValueError('Unknown or unsupported language')
+    return language
+
+
+def roman_to_int(s: str) -> int:
+    """
+    Convert a Roman numeral string to an integer.
+    Args:
+        s (str): The Roman numeral string.
+
+    Returns: The int representing the Roman numeral.
+    """
+    values = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
+    total = 0
+    for i in range(len(s)):
+        if i + 1 < len(s) and values[s[i]] < values[s[i + 1]]:
+            total -= values[s[i]]
+        else:
+            total += values[s[i]]
+    return total
+
 
 
 def html_table_to_markdown(markup: str) -> str:
