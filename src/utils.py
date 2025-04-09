@@ -36,7 +36,6 @@ def roman_to_int(s: str) -> int:
     return total
 
 
-
 def html_table_to_markdown(markup: str) -> str:
     """
     Convert a HTML table to a Markdown table.

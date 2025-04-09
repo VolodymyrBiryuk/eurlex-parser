@@ -17,7 +17,6 @@ from utils import (
     detect_language
 )
 
-warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 language = ''
 
 # The preamble always opens with these sentences, depending on the language
@@ -121,17 +120,21 @@ def parse_pbl(soup):
             'link': '',
         }
 
-        for child in soup.find('div', {'id': 'docHtml'}).find_all(recursive=False):
+        try:
+            tags = soup.find('div', {'id': 'docHtml'}).find_all(recursive=False)
+        except AttributeError:
+            tags = soup.find('body').find_all(recursive=False)
+        for tag in tags:
             try:
-                if 'ti-art' in child.attrs['class']:
+                if 'ti-art' in tag.attrs['class']:
                     # Preamble ended, stop iteration
                     break
             except KeyError:
                 pass
 
             if preamble_started:
-                if child.name == 'table':
-                    line = ' '.join(child.text.split())
+                if tag.name == 'table':
+                    line = ' '.join(tag.text.split())
                     lines.append(line)
                     paragraph_no, text = re.search(regexp, line).groups()
                     doc = deepcopy(doc_template)
@@ -145,7 +148,7 @@ def parse_pbl(soup):
                     break
 
             else:
-                preamble_started = child.text.strip() == preamble_opening
+                preamble_started = tag.text.strip() == preamble_opening
         pbl_text = '\n'.join(lines)
         notes = []
     else:
@@ -244,7 +247,11 @@ def parse_annexes(soup) -> list:
             'link': '',
         }
 
-        for document_tag in soup.find('div', {'id': 'docHtml'}).find_all(recursive=False):
+        try:
+            tags = soup.find('div', {'id': 'docHtml'}).find_all(recursive=False)
+        except AttributeError:
+            tags = soup.find('body').find_all(recursive=False)
+        for document_tag in tags:
             tag_name = document_tag.name
             tag_class = document_tag.get('class', '')
             if do_parse:
@@ -448,7 +455,11 @@ def parse_enacting_terms(soup):
     elif language == 'DE':
         articles_started = False
 
-        for tag in soup.find('div', {'id': 'docHtml'}).find_all(recursive=False):
+        try:
+            tags = soup.find('div', {'id': 'docHtml'}).find_all(recursive=False)
+        except AttributeError:
+            tags = soup.find('body').find_all(recursive=False)
+        for tag in tags:
             doc = deepcopy(doc_template)
             tag_name = tag.name
             tag_id = tag.get('id', '')
@@ -744,6 +755,10 @@ def get_data_by_celex_id(celex_id: str, lang: str = "en") -> dict:
     url = f"https://eur-lex.europa.eu/legal-content/{language}/TXT/HTML/?uri=CELEX:{celex_id}"
     table_url = f"https://eur-lex.europa.eu/legal-content/{language}/ALL/?uri=CELEX:{celex_id}"
     response = requests.get(url)
+    with open(f'{celex_id}.html', 'w') as file:
+        file.write(response.text)
+
+    warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
     soup = BeautifulSoup(response.text, 'lxml')
 
     if language == 'EN':
