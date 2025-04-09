@@ -282,6 +282,110 @@ def parse_articles(soup):
     return articles
 
 
+def parse_enacting_terms(soup):
+    global language
+    global url
+
+    enacting_terms = []
+    doc_template = {
+        'name_of_subdivision': '',
+        'chapter': '',
+        'article': '',
+        'paragraph': '',
+        'point': '',
+        'text': '',
+        'link': '',
+    }
+
+    if not language:
+        language = detect_language(soup)
+    if language == 'EN':
+        pass
+    elif language == 'DE':
+        articles_started = False
+
+        for tag in soup.find('div', {'id': 'docHtml'}).find_all(recursive=False):
+            doc = deepcopy(doc_template)
+            tag_name = tag.name
+            tag_id = tag.get('id', '')
+            if tag_id:
+                doc_template['link'] = f'{url}#{tag_id}'
+            tag_class = tag.get('class', '')
+
+            # Replace all nun printable paces
+            tag_text = tag.text.replace('\xa0', ' ')
+            tag_text = tag_text.replace('&nbsp;', ' ')
+
+            if tag_text == preamble_closings[language]:
+                # The articles start after the preamble is closed
+                articles_started = True
+                continue
+            if not articles_started:
+                # Skip all before the enacting terms section
+                continue
+            if tag_text == preamble_closings[language]:
+                articles_started = True
+                continue
+            if tag_class and 'final' in tag_class:
+                # Terminate iteration at the end of the enacting terms section
+                break
+
+            if tag_name == 'p' and 'ti-section-1' in tag_class:
+                text = tag_text.strip()
+                # Chapters and sections have the same name and class. We only use the class for now
+                if text.startswith('KAPITEL'):
+                    doc_template['chapter'] = text
+                    doc_template['link'] = ''
+                    doc_template['name_of_subdivision'] = 'chapter'
+            elif tag_name == 'p' and 'ti-section-2' in tag_class:
+                doc_template['chapter'] += f' - {tag_text.strip()}'
+            elif tag_name == 'p' and 'ti-art' in tag_class:
+                doc_template['article'] = tag_text.strip()
+                doc_template['name_of_subdivision'] = 'article'
+            elif tag_name == 'p' and 'sti-art' in tag_class:
+                doc_template['article'] += f' - {tag_text.strip()}'
+                doc_template['name_of_subdivision'] = 'article'
+            elif tag_name == 'p' and 'normal' in tag_class:
+                try:
+                    paragraph, text = tag_text.split('   ')
+                    doc_template['paragraph'] = paragraph.strip()
+                    doc = deepcopy(doc_template)
+                    doc['text'] = text.strip()
+                    doc['name_of_subdivision'] = 'numbered_paragraph'
+                except ValueError:
+                    doc_template['paragraph'] = ''
+                    doc = deepcopy(doc_template)
+                    doc['text'] = tag_text.strip()
+                    doc['name_of_subdivision'] = 'unnumbered_paragraph'
+                enacting_terms.append(doc)
+            elif tag_name == 'table':
+                number, content = tag.find('tbody').find('tr').find_all('td', recursive=False)
+                number = number.text.strip()
+                if bool(re.search(r'\d+\.', number)) or bool(re.search(r'\(\d+\)', number)):
+                    # Paragraphs are numbered like this: 1., 2. (1), (2)
+                    doc_template['paragraph'] = number
+                    doc = deepcopy(doc_template)
+                    doc['name_of_subdivision'] = 'numbered_paragraph'
+                    doc['text'] = content.find('p').text.strip()
+                    enacting_terms.append(doc)
+                    for tables in content.find_all('table', recursive=False):
+                        doc = deepcopy(doc_template)
+                        number, text = tables.find_all('td')
+                        doc['point'] = number.find('p').text.strip()
+                        doc['text'] = text.find('p').text.strip()
+                        doc['name_of_subdivision'] = 'point'
+                        enacting_terms.append(doc)
+                elif bool(re.search(r'[a-z]+\)', number)):
+                    # Points are numbered like this: (a), (b), (i), (ii)
+                    doc['point'] = number
+                    doc['name_of_subdivision'] = 'point'
+                    doc['text'] = content.find('p').text.strip()
+                    enacting_terms.append(doc)
+    else:
+        raise ValueError('Unknown or Unsupported language')
+    return enacting_terms
+
+
 def extract_note_text(text):
     # cleaned_text = text.strip().replace('\xa0', '')
     cleaned_text = text.strip().replace('\u00a0', ' ')
