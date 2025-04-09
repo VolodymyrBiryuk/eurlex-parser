@@ -69,11 +69,16 @@ url = ''
 
 
 def parse_title(soup):
+    global language
     title_text = ''
-    tit_1_div = soup.find('div', id="tit_1")
-    if tit_1_div:
-        title_text = tit_1_div.text
-        title_text = title_text.replace('\u00a0', ' ').strip()
+    if language == 'EN':
+        tit_1_div = soup.find('div', id="tit_1")
+        if tit_1_div:
+            title_text = tit_1_div.text
+            title_text = title_text.replace('\u00a0', ' ').strip()
+    elif language == 'DE':
+        title_text = ' - '.join([e.text for e in soup.find_all(class_='doc-ti')][:3])
+
     return title_text
 
 
@@ -755,11 +760,18 @@ def get_data_by_celex_id(celex_id: str, lang: str = "en") -> dict:
     url = f"https://eur-lex.europa.eu/legal-content/{language}/TXT/HTML/?uri=CELEX:{celex_id}"
     table_url = f"https://eur-lex.europa.eu/legal-content/{language}/ALL/?uri=CELEX:{celex_id}"
     response = requests.get(url)
+
+    markup = response.text
+
+    # Replace all nun printable paces
+    markup = markup.replace('\xa0', ' ')
+    markup = markup.replace('&nbsp;', ' ')
+
     with open(f'{celex_id}.html', 'w') as file:
         file.write(response.text)
 
     warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
-    soup = BeautifulSoup(response.text, 'lxml')
+    soup = BeautifulSoup(markup, 'lxml')
 
     if language == 'EN':
         if celex_id[5:7] == "PC":
@@ -795,10 +807,12 @@ def get_data_by_celex_id(celex_id: str, lang: str = "en") -> dict:
                 }
             }
     elif language == 'DE':
+        title = parse_title(soup)
         preamble = parse_pbl(soup)
         enacting_terms = parse_enacting_terms(soup)
         annexes = parse_annexes(soup)
         return {
+            'title': title,
             'preamble': preamble,
             'enacting_terms': enacting_terms,
             'annexes': annexes,
