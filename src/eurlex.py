@@ -2,17 +2,52 @@ import json
 import re
 import warnings
 from collections import OrderedDict
+from copy import deepcopy
 from urllib.parse import urljoin
 
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup, XMLParsedAsHTMLWarning
 
-from utils import extract_directive_and_regulation_at_beginning
-from utils import extract_directives_and_regulations
-from utils import html_table_to_markdown
+from utils import (
+    extract_directive_and_regulation_at_beginning,
+    extract_directives_and_regulations,
+    html_table_to_markdown,
+    detect_language
+)
 
 warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
+language = None
+
+# The preamble always opens with these sentences, depending on the language
+preamble_openings = {
+    'DE': 'in Erwägung nachstehender Gründe:',
+    'EN': 'Whereas:',
+    'ES': 'Considerando lo siguiente:',
+    'FR': 'considérant ce qui suit:',
+    'IT': 'HA ADOTTATO IL PRESENTE REGOLAMENTO:',
+}
+
+# The preamble always opens with these sentences, depending on the language
+preamble_closings = {
+    'DE': 'HAT FOLGENDE VERORDNUNG ERLASSEN:',
+    'EN': 'HAS ADOPTED THIS REGULATION:',
+    'ES': 'HA ADOPTADO EL PRESENTE REGLAMENTO:',
+    'FR': 'A ADOPTÉ LE PRÉSENT RÈGLEMENT:',
+    'IT': 'considerando quanto segue:',
+}
+
+# The preamble always opens with these sentences, depending on the language
+enacting_terms_closings = {
+    'DE': 'HAT FOLGENDE VERORDNUNG ERLASSEN:',
+    'EN': 'HAS ADOPTED THIS REGULATION:',
+    'ES': 'HA ADOPTADO EL PRESENTE REGLAMENTO:',
+    'FR': 'A ADOPTÉ LE PRÉSENT RÈGLEMENT:',
+    'IT': 'considerando quanto segue:',
+}
+
+base_url = 'https://eur-lex.europa.eu/legal-content'
+url = ''
 
 
 def parse_title(soup):
@@ -36,17 +71,68 @@ def parse_fnp(soup):
 
 
 def parse_pbl(soup):
-    pbl_text = ''
-    pbl_1_div = soup.find('div', id="pbl_1")
-    if pbl_1_div:
-        res = [line for line in pbl_1_div.text.split('\n') if line.strip()]
-        res = '\n'.join(res)
-        pbl_text = re.sub(r'(\(\d+\))\n', r'\1 ', res)
-        pbl_text = pbl_text.replace('\u00a0', ' ')
+    regexp = re.compile(r'(\(\d+\))\s(.*)')
+    lines = []
+    docs = []
+    global language
+    if not language:
+        language = detect_language(soup)
+    if language == 'EN':
+        pbl_text = ''
+        pbl_1_div = soup.find('div', id="pbl_1")
+        if pbl_1_div:
+            res = [line for line in pbl_1_div.text.split('\n') if line.strip()]
+            res = '\n'.join(res)
+            pbl_text = re.sub(r'(\(\d+\))\n', r'\1 ', res)
+            pbl_text = pbl_text.replace('\u00a0', ' ')
+        notes = extract_notes(soup, pbl_1_div)
+    elif language in preamble_openings.keys():
+        preamble_opening = preamble_openings[language]
+        preamble_started = False
 
-    notes = extract_notes(soup, pbl_1_div)
+        doc_template = {
+            'name_of_subdivision': '',
+            'chapter': '',
+            'article': '',
+            'paragraph': '',
+            'point': '',
+            'text': '',
+            'link': '',
+        }
+
+        for child in soup.find('div', {'id': 'docHtml'}).find_all(recursive=False):
+            try:
+                if 'ti-art' in child.attrs['class']:
+                    # Preamble ended, stop iteration
+                    break
+            except KeyError:
+                pass
+
+            if preamble_started:
+                if child.name == 'table':
+                    line = ' '.join(child.text.split())
+                    lines.append(line)
+                    paragraph_no, text = re.search(regexp, line).groups()
+                    doc = deepcopy(doc_template)
+                    doc['name_of_subdivision'] = 'numbered_recital'
+                    doc['paragraph'] = paragraph_no.strip()
+                    doc['text'] = text.strip()
+                    doc['link'] = url
+                    docs.append(doc)
+                else:
+                    # Preamble ended, stop iteration
+                    break
+
+            else:
+                preamble_started = child.text.strip() == preamble_opening
+        pbl_text = '\n'.join(lines)
+        notes = []
+    else:
+        raise ValueError('Unknown or unsupported language')
 
     return {
+        'docs': docs,
+        'lines': lines,
         'text': pbl_text,
         'notes': notes,
         'references': extract_directives_and_regulations(pbl_text)
@@ -157,35 +243,42 @@ def find_parent_title(div, depth=0, results=None):
 
 def parse_articles(soup):
     articles = []
-    # bottom up
-    divs_with_art_id = soup.find_all("div", class_="eli-subdivision", id=lambda x: x and x.startswith("art"))
-    for i, div in enumerate(divs_with_art_id):
-        notes = extract_notes(soup, div)
-        article_data = {}
-        article_id = ''
-        article_title = ''
-        article_text = ''
-        for c in div.children:
-            if c.name == 'p' and "ti-art" in str(c.get('class')):
-                article_id = c.text.replace("\n", "").replace('\u00a0', ' ')
-            elif c.name == 'div' and c.get('class') == ['eli-title']:
-                article_title = c.text.replace("\n", "")
-                # elif c.findChildren == 'p' and "sti-art" in str(c.get('class')):
-            #     article_title = c.text.replace("\n", "")
-            else:
-                article_text += clean_text(c.text)
+    global language
+    global url
+    if not language:
+        language = detect_language(soup)
+    if language == 'EN':
+        # bottom up
+        divs_with_art_id = soup.find_all("div", class_="eli-subdivision", id=lambda x: x and x.startswith("art"))
+        for i, div in enumerate(divs_with_art_id):
+            notes = extract_notes(soup, div)
+            article_data = {}
+            article_id = ''
+            article_subtitle = ''
+            article_text = ''
+            for c in div.children:
+                if c.name == 'p' and "ti-art" in str(c.get('class')):
+                    article_id = c.text.replace("\n", "").replace('\u00a0', ' ')
+                elif c.name == 'div' and c.get('class') == ['eli-title']:
+                    article_subtitle = c.text.replace("\n", "")
+                    # elif c.findChildren == 'p' and "sti-art" in str(c.get('class')):
+                #     article_title = c.text.replace("\n", "")
+                else:
+                    article_text += clean_text(c.text)
 
-        article_text = article_text.lstrip('\n').rstrip('\n').replace('\n\n\n', '\n')
+            article_text = article_text.lstrip('\n').rstrip('\n').replace('\n\n\n', '\n')
 
-        parent_info = find_parent_title(div.findParent("div"))
-        parent_info = OrderedDict(reversed(list(parent_info.items())))
-        article_data['id'] = article_id
-        article_data['title'] = article_title
-        article_data['text'] = article_text
-        article_data['metadata'] = parent_info
-        article_data['notes'] = notes
-        article_data['references'] = extract_directives_and_regulations(article_text)
-        articles.append(article_data)
+            parent_info = find_parent_title(div.findParent("div"))
+            parent_info = OrderedDict(reversed(list(parent_info.items())))
+            article_data['id'] = article_id
+            article_data['title'] = article_subtitle
+            article_data['text'] = article_text
+            article_data['metadata'] = parent_info
+            article_data['notes'] = notes
+            article_data['references'] = extract_directives_and_regulations(article_text)
+            articles.append(article_data)
+    else:
+        raise ValueError('Unknown or Unsupported language')
     return articles
 
 
@@ -350,7 +443,8 @@ def get_summary_by_celex_id(celex_id: str, language: str = "en") -> dict:
     """
     Support multiple languages
     """
-    url = f"https://eur-lex.europa.eu/legal-content/{language}/LSU/?uri=CELEX:{celex_id}"
+    global url
+    url = f"{base_url}/{language}/LSU/?uri=CELEX:{celex_id}"
     response = requests.get(url)
 
     soup = BeautifulSoup(response.text, 'lxml')
@@ -396,6 +490,7 @@ def get_data_by_celex_id(celex_id: str, language: str = "en") -> dict:
     Only support English for now
     """
 
+    global url
     url = f"https://eur-lex.europa.eu/legal-content/{language}/TXT/HTML/?uri=CELEX:{celex_id}"
     table_url = f"https://eur-lex.europa.eu/legal-content/{language}/ALL/?uri=CELEX:{celex_id}"
     response = requests.get(url)
