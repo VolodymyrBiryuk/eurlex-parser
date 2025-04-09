@@ -2,17 +2,71 @@ import json
 import re
 import warnings
 from collections import OrderedDict
+from copy import deepcopy
 from urllib.parse import urljoin
 
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup, XMLParsedAsHTMLWarning
 
-from utils import extract_directive_and_regulation_at_beginning
-from utils import extract_directives_and_regulations
-from utils import html_table_to_markdown
+import utils
+from utils import (
+    extract_directive_and_regulation_at_beginning,
+    extract_directives_and_regulations,
+    html_table_to_markdown,
+    detect_language
+)
 
 warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
+language = ''
+
+# The preamble always opens with these sentences, depending on the language
+preamble_openings = {
+    'DE': 'in Erwägung nachstehender Gründe:',
+    'EN': 'Whereas:',
+    'ES': 'Considerando lo siguiente:',
+    'FR': 'considérant ce qui suit:',
+    'IT': 'HA ADOTTATO IL PRESENTE REGOLAMENTO:',
+}
+
+# The preamble always opens with these sentences, depending on the language
+preamble_closings = {
+    'DE': 'HAT FOLGENDE VERORDNUNG ERLASSEN:',
+    'EN': 'HAS ADOPTED THIS REGULATION:',
+    'ES': 'HA ADOPTADO EL PRESENTE REGLAMENTO:',
+    'FR': 'A ADOPTÉ LE PRÉSENT RÈGLEMENT:',
+    'IT': 'considerando quanto segue:',
+}
+
+# The preamble always opens with these sentences, depending on the language
+enacting_terms_closings = {
+    'DE': 'HAT FOLGENDE VERORDNUNG ERLASSEN:',
+    'EN': 'HAS ADOPTED THIS REGULATION:',
+    'ES': 'HA ADOPTADO EL PRESENTE REGLAMENTO:',
+    'FR': 'A ADOPTÉ LE PRÉSENT RÈGLEMENT:',
+    'IT': 'considerando quanto segue:',
+}
+
+# The Annex title translation
+annex_names = {
+    'DE': 'ANHANG',
+    'EN': 'ANNEX',
+    'ES': 'ANEXO',
+    'FR': 'ANNEXE',
+    'IT': 'ALLEGATO',
+}
+
+# The Annex title translation
+chapter_names = {
+    'DE': 'KAPITEL',
+    'EN': 'CHAPTER',
+    'ES': 'CAPÍTULO',
+    'FR': 'CHAPITRE',
+    'IT': 'CAPO',
+}
+
+base_url = 'https://eur-lex.europa.eu/legal-content'
+url = ''
 
 
 def parse_title(soup):
@@ -36,17 +90,70 @@ def parse_fnp(soup):
 
 
 def parse_pbl(soup):
-    pbl_text = ''
-    pbl_1_div = soup.find('div', id="pbl_1")
-    if pbl_1_div:
-        res = [line for line in pbl_1_div.text.split('\n') if line.strip()]
-        res = '\n'.join(res)
-        pbl_text = re.sub(r'(\(\d+\))\n', r'\1 ', res)
-        pbl_text = pbl_text.replace('\u00a0', ' ')
+    regexp = re.compile(r'(\(\d+\))\s(.*)')
+    lines = []
+    docs = []
+    global language
+    if not language:
+        language = detect_language(soup)
+    if language == 'EN':
+        pbl_text = ''
+        pbl_1_div = soup.find('div', id="pbl_1")
+        if pbl_1_div:
+            res = [line for line in pbl_1_div.text.split('\n') if line.strip()]
+            res = '\n'.join(res)
+            pbl_text = re.sub(r'(\(\d+\))\n', r'\1 ', res)
+            pbl_text = pbl_text.replace('\u00a0', ' ')
+        notes = extract_notes(soup, pbl_1_div)
+    elif language in preamble_openings.keys():
+        preamble_opening = preamble_openings[language]
+        preamble_started = False
 
-    notes = extract_notes(soup, pbl_1_div)
+        doc_template = {
+            'name_of_subdivision': '',
+            'annex': '',
+            'chapter': '',
+            'article': '',
+            'paragraph': '',
+            'point': '',
+            'table': '',
+            'text': '',
+            'link': '',
+        }
+
+        for child in soup.find('div', {'id': 'docHtml'}).find_all(recursive=False):
+            try:
+                if 'ti-art' in child.attrs['class']:
+                    # Preamble ended, stop iteration
+                    break
+            except KeyError:
+                pass
+
+            if preamble_started:
+                if child.name == 'table':
+                    line = ' '.join(child.text.split())
+                    lines.append(line)
+                    paragraph_no, text = re.search(regexp, line).groups()
+                    doc = deepcopy(doc_template)
+                    doc['name_of_subdivision'] = 'numbered_recital'
+                    doc['paragraph'] = paragraph_no.strip()
+                    doc['text'] = text.strip()
+                    doc['link'] = url
+                    docs.append(doc)
+                else:
+                    # Preamble ended, stop iteration
+                    break
+
+            else:
+                preamble_started = child.text.strip() == preamble_opening
+        pbl_text = '\n'.join(lines)
+        notes = []
+    else:
+        raise ValueError('Unknown or unsupported language')
 
     return {
+        'docs': docs,
+        'lines': lines,
         'text': pbl_text,
         'notes': notes,
         'references': extract_directives_and_regulations(pbl_text)
@@ -54,71 +161,192 @@ def parse_pbl(soup):
 
 
 def parse_annexes(soup) -> list:
+    global language
     annexes = []
-    divs_with_anx_id = soup.find_all("div", class_="eli-container", id=lambda x: x and x.startswith("anx"))
-    for div in divs_with_anx_id:
-        annex_data = {}
-        annex_id = ''
-        annex_title = ''
-        annex_text = ''
-        annex_table = ''
-        annex_content = ''
-        for c in div.children:
-            if c.text.isspace():
-                # Skip empty tags
-                continue
-            elif c.name == 'p' and "doc-ti" in str(c.get('class')):
-                annex_id = c.text.strip()
-            elif c.name == 'p' and "ti-grseq-1" in str(c.get('class')) and not annex_title:
-                annex_title = c.text.strip()
-                annex_content += annex_title
-            elif c.name == 'table' and "table" not in str(c.get('class')):
-                markdown_table = html_table_to_markdown(str(c))
-                # Tables without a class are not really tables, but sub-paragraphs
-                # and should not have vertical separators
-                markdown_table = markdown_table.replace('| ', '')
-                annex_table = markdown_table
-                annex_content += markdown_table
-            elif c.name == 'table' and "table" in str(c.get('class')):
-                markdown_table = html_table_to_markdown(str(c))
-                annex_table = markdown_table
-                annex_content += '\n' + markdown_table
-            elif c.name == 'p' and "oj-normal" in str(c.get('class')):
-                cleaned_text = clean_text(c.text)
-                annex_text += cleaned_text
-                annex_content += cleaned_text
-            elif c.name == 'p' and "oj-ti-grseq-1" in str(c.get('class')):
-                cleaned_text = clean_text(c.text)
-                annex_text += cleaned_text
-                annex_content += '\n\n' + cleaned_text
-            elif c.name == 'p' and "oj-ti-tbl" in str(c.get('class')):
-                cleaned_text = clean_text(c.text)
-                annex_text += cleaned_text
-                if c.get('id'):
-                    cleaned_text = '\n\n' + cleaned_text
-                annex_content += cleaned_text
-            elif c.name == 'hr' and "oj-note" in str(c.get('class')):
-                cleaned_text = clean_text(c.text)
-                annex_text += cleaned_text
-                annex_content += '\n\n'
-            elif c.name == 'p' and "oj-note" in str(c.get('class')):
-                cleaned_text = clean_text(c.text)
-                annex_text += cleaned_text
-                annex_content += cleaned_text.strip()
-            else:
-                cleaned_text = clean_text(c.text)
-                annex_text += cleaned_text
-                annex_content += cleaned_text
+    if language == 'EN':
+        divs_with_anx_id = soup.find_all("div", class_="eli-container", id=lambda x: x and x.startswith("anx"))
+        for div in divs_with_anx_id:
+            annex_data = {}
+            annex_id = ''
+            annex_title = ''
+            annex_text = ''
+            annex_table = ''
+            annex_content = ''
+            for c in div.children:
+                if c.text.isspace():
+                    # Skip empty tags
+                    continue
+                elif c.name == 'p' and "doc-ti" in str(c.get('class')):
+                    annex_id = c.text.strip()
+                elif c.name == 'p' and "ti-grseq-1" in str(c.get('class')) and not annex_title:
+                    annex_title = c.text.strip()
+                    annex_content += annex_title
+                elif c.name == 'table' and "table" not in str(c.get('class')):
+                    markdown_table = html_table_to_markdown(str(c))
+                    # Tables without a class are not really tables, but sub-paragraphs
+                    # and should not have vertical separators
+                    markdown_table = markdown_table.replace('| ', '')
+                    annex_table = markdown_table
+                    annex_content += markdown_table
+                elif c.name == 'table' and "table" in str(c.get('class')):
+                    markdown_table = html_table_to_markdown(str(c))
+                    annex_table = markdown_table
+                    annex_content += '\n' + markdown_table
+                elif c.name == 'p' and "oj-normal" in str(c.get('class')):
+                    cleaned_text = clean_text(c.text)
+                    annex_text += cleaned_text
+                    annex_content += cleaned_text
+                elif c.name == 'p' and "oj-ti-grseq-1" in str(c.get('class')):
+                    cleaned_text = clean_text(c.text)
+                    annex_text += cleaned_text
+                    annex_content += '\n\n' + cleaned_text
+                elif c.name == 'p' and "oj-ti-tbl" in str(c.get('class')):
+                    cleaned_text = clean_text(c.text)
+                    annex_text += cleaned_text
+                    if c.get('id'):
+                        cleaned_text = '\n\n' + cleaned_text
+                    annex_content += cleaned_text
+                elif c.name == 'hr' and "oj-note" in str(c.get('class')):
+                    cleaned_text = clean_text(c.text)
+                    annex_text += cleaned_text
+                    annex_content += '\n\n'
+                elif c.name == 'p' and "oj-note" in str(c.get('class')):
+                    cleaned_text = clean_text(c.text)
+                    annex_text += cleaned_text
+                    annex_content += cleaned_text.strip()
+                else:
+                    cleaned_text = clean_text(c.text)
+                    annex_text += cleaned_text
+                    annex_content += cleaned_text
 
-        annex_text = annex_text.lstrip('\n').rstrip('\n').replace('\n\n\n', '\n')
-        annex_content = annex_content.lstrip().rstrip()
-        annex_data['id'] = annex_id
-        annex_data['title'] = annex_title
-        annex_data['text'] = annex_text
-        annex_data['content'] = annex_content
-        annex_data['table'] = annex_table
-        annex_data['references'] = extract_directives_and_regulations(annex_text)
-        annexes.append(annex_data)
+            annex_text = annex_text.lstrip('\n').rstrip('\n').replace('\n\n\n', '\n')
+            annex_content = annex_content.lstrip().rstrip()
+            annex_data['id'] = annex_id
+            annex_data['title'] = annex_title
+            annex_data['text'] = annex_text
+            annex_data['content'] = annex_content
+            annex_data['table'] = annex_table
+            annex_data['references'] = extract_directives_and_regulations(annex_text)
+            annexes.append(annex_data)
+    elif language == 'DE':
+
+        do_parse = False
+
+        doc_template = {
+            'name_of_subdivision': '',
+            'annex': '',
+            'chapter': '',
+            'article': '',
+            'paragraph': '',
+            'point': '',
+            'table': '',
+            'text': '',
+            'link': '',
+        }
+
+        for document_tag in soup.find('div', {'id': 'docHtml'}).find_all(recursive=False):
+            tag_name = document_tag.name
+            tag_class = document_tag.get('class', '')
+            if do_parse:
+                if tag_name == 'div':
+                    for annex_tag in document_tag.find_all(recursive=False):
+                        doc = deepcopy(doc_template)
+                        tag_name = annex_tag.name
+                        tag_id = annex_tag.get('id', '')
+                        if tag_id:
+                            doc_template['link'] = f'{url}#{tag_id}'
+                        tag_class = annex_tag.get('class', '')
+
+                        # Replace all nun printable paces
+                        tag_text = annex_tag.text.replace('\xa0', ' ')
+                        tag_text = tag_text.replace('&nbsp;', ' ')
+
+                        if tag_name == 'p' and 'doc-ti' in tag_class:
+                            # The annex title
+                            if tag_id:
+                                doc_template['annex'] = tag_text.strip()
+                                doc_template['paragraph'] = ''
+                            else:
+                                doc_template['annex'] += f' - {tag_text.strip()}'
+                            doc_template['name_of_subdivision'] = 'annex'
+                        elif tag_name == 'p' and 'ti-grseq-1' in tag_class:
+                            if tag_text.startswith(chapter_names[language]):
+                                # The title is a chapter title
+                                doc_template['chapter'] = tag_text.strip()
+                                doc_template['name_of_subdivision'] = 'chapter'
+                            else:
+                                # The title is either a numbered paragraph or a chapter subtitle
+                                try:
+                                    # The numbered paragraph
+                                    paragraph, text = re.search(r'(\d\.\d?\.?\d?\.?)\s{3}(.+)', tag_text).groups()
+                                    doc_template['paragraph'] = f'{paragraph.strip()} {text.strip()}'
+                                    doc_template['name_of_subdivision'] = 'numbered_paragraph'
+                                except AttributeError:
+                                    # The chapter subtitle
+                                    doc_template['chapter'] += tag_text.strip()
+                                    doc_template['name_of_subdivision'] = 'chapter'
+                        elif tag_name == 'p' and 'normal' in tag_class:
+                            try:
+                                paragraph, text = tag_text.split('   ')
+                                doc_template['paragraph'] = paragraph.strip()
+                                doc = deepcopy(doc_template)
+                                doc['text'] = text.strip()
+                                doc['name_of_subdivision'] = 'numbered_paragraph'
+                            except ValueError:
+                                # doc_template['paragraph'] = ''
+                                doc = deepcopy(doc_template)
+                                doc['text'] = tag_text.strip()
+                                doc['name_of_subdivision'] = 'sentence'
+                            annexes.append(doc)
+                        elif tag_name == 'p' and 'ti-tbl' in tag_class:
+                                # This is the title and subtitle of an actual table
+                                if tag_id:
+                                    doc_template['table'] = tag_text.strip()
+                                else:
+                                    doc_template['table'] += f' - {tag_text.strip()}'
+                                doc_template['name_of_subdivision'] = 'table'
+                        elif tag_name == 'table' and 'table' in tag_class:
+                            table_md = utils.html_table_to_markdown(str(annex_tag))
+                            table_lines = table_md.split('\n')
+                            for line in table_lines:
+                                doc = deepcopy(doc_template)
+                                doc['text'] = line
+                                annexes.append(doc)
+                            doc_template['table'] = ''
+                        elif tag_name == 'table':
+                            try:
+                                number, content = annex_tag.find('tbody').find('tr').find_all('td', recursive=False)
+                                number = number.text.strip()
+                            except ValueError:
+                                number = annex_tag.text.strip()
+                            if bool(re.search(r'\d+\.', number)) or bool(re.search(r'\(\d+\)', number)):
+                                # Paragraphs are numbered like this: 1., 2. (1), (2)
+                                doc_template['paragraph'] = number
+                                doc = deepcopy(doc_template)
+                                doc['name_of_subdivision'] = 'numbered_paragraph'
+                                doc['text'] = content.find('p').text.strip()
+                                annexes.append(doc)
+                                for tables in content.find_all('table', recursive=False):
+                                    doc = deepcopy(doc_template)
+                                    number, text = tables.find_all('td')
+                                    doc['point'] = number.find('p').text.strip()
+                                    doc['text'] = text.find('p').text.strip()
+                                    doc['name_of_subdivision'] = 'point'
+                                    annexes.append(doc)
+                            elif bool(re.search(r'[a-z]+\)', number)):
+                                # Points are numbered like this: (a), (b), (i), (ii)
+                                doc['point'] = number
+                                doc['name_of_subdivision'] = 'point'
+                                doc['text'] = content.find('p').text.strip()
+                                annexes.append(doc)
+                if tag_name == 'hr' and 'doc-end' in tag_class:
+                    # End of the annex
+                    do_parse = False
+                    break
+            else:
+                if tag_name == 'hr' and 'doc-sep' in tag_class:
+                    # Beginning of the annex
+                    do_parse = True
     return annexes
 
 
@@ -157,36 +385,149 @@ def find_parent_title(div, depth=0, results=None):
 
 def parse_articles(soup):
     articles = []
-    # bottom up
-    divs_with_art_id = soup.find_all("div", class_="eli-subdivision", id=lambda x: x and x.startswith("art"))
-    for i, div in enumerate(divs_with_art_id):
-        notes = extract_notes(soup, div)
-        article_data = {}
-        article_id = ''
-        article_title = ''
-        article_text = ''
-        for c in div.children:
-            if c.name == 'p' and "ti-art" in str(c.get('class')):
-                article_id = c.text.replace("\n", "").replace('\u00a0', ' ')
-            elif c.name == 'div' and c.get('class') == ['eli-title']:
-                article_title = c.text.replace("\n", "")
-                # elif c.findChildren == 'p' and "sti-art" in str(c.get('class')):
-            #     article_title = c.text.replace("\n", "")
-            else:
-                article_text += clean_text(c.text)
+    global language
+    global url
+    if not language:
+        language = detect_language(soup)
+    if language == 'EN':
+        # bottom up
+        divs_with_art_id = soup.find_all("div", class_="eli-subdivision", id=lambda x: x and x.startswith("art"))
+        for i, div in enumerate(divs_with_art_id):
+            notes = extract_notes(soup, div)
+            article_data = {}
+            article_id = ''
+            article_subtitle = ''
+            article_text = ''
+            for c in div.children:
+                if c.name == 'p' and "ti-art" in str(c.get('class')):
+                    article_id = c.text.replace("\n", "").replace('\u00a0', ' ')
+                elif c.name == 'div' and c.get('class') == ['eli-title']:
+                    article_subtitle = c.text.replace("\n", "")
+                    # elif c.findChildren == 'p' and "sti-art" in str(c.get('class')):
+                #     article_title = c.text.replace("\n", "")
+                else:
+                    article_text += clean_text(c.text)
 
-        article_text = article_text.lstrip('\n').rstrip('\n').replace('\n\n\n', '\n')
+            article_text = article_text.lstrip('\n').rstrip('\n').replace('\n\n\n', '\n')
 
-        parent_info = find_parent_title(div.findParent("div"))
-        parent_info = OrderedDict(reversed(list(parent_info.items())))
-        article_data['id'] = article_id
-        article_data['title'] = article_title
-        article_data['text'] = article_text
-        article_data['metadata'] = parent_info
-        article_data['notes'] = notes
-        article_data['references'] = extract_directives_and_regulations(article_text)
-        articles.append(article_data)
+            parent_info = find_parent_title(div.findParent("div"))
+            parent_info = OrderedDict(reversed(list(parent_info.items())))
+            article_data['id'] = article_id
+            article_data['title'] = article_subtitle
+            article_data['text'] = article_text
+            article_data['metadata'] = parent_info
+            article_data['notes'] = notes
+            article_data['references'] = extract_directives_and_regulations(article_text)
+            articles.append(article_data)
+    else:
+        raise ValueError('Unknown or Unsupported language')
     return articles
+
+
+def parse_enacting_terms(soup):
+    global language
+    global url
+
+    enacting_terms = []
+    doc_template = {
+        'name_of_subdivision': '',
+        'annex': '',
+        'chapter': '',
+        'article': '',
+        'paragraph': '',
+        'point': '',
+        'table': '',
+        'text': '',
+        'link': '',
+    }
+
+    if not language:
+        language = detect_language(soup)
+    if language == 'EN':
+        pass
+    elif language == 'DE':
+        articles_started = False
+
+        for tag in soup.find('div', {'id': 'docHtml'}).find_all(recursive=False):
+            doc = deepcopy(doc_template)
+            tag_name = tag.name
+            tag_id = tag.get('id', '')
+            if tag_id:
+                doc_template['link'] = f'{url}#{tag_id}'
+            tag_class = tag.get('class', '')
+
+            # Replace all nun printable paces
+            tag_text = tag.text.replace('\xa0', ' ')
+            tag_text = tag_text.replace('&nbsp;', ' ')
+
+            if tag_text == preamble_closings[language]:
+                # The articles start after the preamble is closed
+                articles_started = True
+                continue
+            if not articles_started:
+                # Skip all before the enacting terms section
+                continue
+            if tag_text == preamble_closings[language]:
+                articles_started = True
+                continue
+            if tag_class and 'final' in tag_class:
+                # Terminate iteration at the end of the enacting terms section
+                break
+
+            if tag_name == 'p' and 'ti-section-1' in tag_class:
+                text = tag_text.strip()
+                # Chapters and sections have the same name and class. We only use the class for now
+                if text.startswith('KAPITEL'):
+                    doc_template['chapter'] = text
+                    doc_template['link'] = ''
+                    doc_template['name_of_subdivision'] = 'chapter'
+            elif tag_name == 'p' and 'ti-section-2' in tag_class:
+                doc_template['chapter'] += f' - {tag_text.strip()}'
+            elif tag_name == 'p' and 'ti-art' in tag_class:
+                doc_template['article'] = tag_text.strip()
+                doc_template['name_of_subdivision'] = 'article'
+            elif tag_name == 'p' and 'sti-art' in tag_class:
+                doc_template['article'] += f' - {tag_text.strip()}'
+                doc_template['name_of_subdivision'] = 'article'
+            elif tag_name == 'p' and 'normal' in tag_class:
+                try:
+                    paragraph, text = tag_text.split('   ')
+                    doc_template['paragraph'] = paragraph.strip()
+                    doc = deepcopy(doc_template)
+                    doc['text'] = text.strip()
+                    doc['name_of_subdivision'] = 'numbered_paragraph'
+                except ValueError:
+                    doc_template['paragraph'] = ''
+                    doc = deepcopy(doc_template)
+                    doc['text'] = tag_text.strip()
+                    doc['name_of_subdivision'] = 'unnumbered_paragraph'
+                enacting_terms.append(doc)
+            elif tag_name == 'table':
+                number, content = tag.find('tbody').find('tr').find_all('td', recursive=False)
+                number = number.text.strip()
+                if bool(re.search(r'\d+\.', number)) or bool(re.search(r'\(\d+\)', number)):
+                    # Paragraphs are numbered like this: 1., 2. (1), (2)
+                    doc_template['paragraph'] = number
+                    doc = deepcopy(doc_template)
+                    doc['name_of_subdivision'] = 'numbered_paragraph'
+                    doc['text'] = content.find('p').text.strip()
+                    enacting_terms.append(doc)
+                    for tables in content.find_all('table', recursive=False):
+                        doc = deepcopy(doc_template)
+                        number, text = tables.find_all('td')
+                        doc['point'] = number.find('p').text.strip()
+                        doc['text'] = text.find('p').text.strip()
+                        doc['name_of_subdivision'] = 'point'
+                        enacting_terms.append(doc)
+                elif bool(re.search(r'[a-z]+\)', number)):
+                    # Points are numbered like this: (a), (b), (i), (ii)
+                    doc['point'] = number
+                    doc['name_of_subdivision'] = 'point'
+                    doc['text'] = content.find('p').text.strip()
+                    enacting_terms.append(doc)
+    else:
+        raise ValueError('Unknown or Unsupported language')
+    return enacting_terms
 
 
 def extract_note_text(text):
@@ -350,7 +691,8 @@ def get_summary_by_celex_id(celex_id: str, language: str = "en") -> dict:
     """
     Support multiple languages
     """
-    url = f"https://eur-lex.europa.eu/legal-content/{language}/LSU/?uri=CELEX:{celex_id}"
+    global url
+    url = f"{base_url}/{language}/LSU/?uri=CELEX:{celex_id}"
     response = requests.get(url)
 
     soup = BeautifulSoup(response.text, 'lxml')
@@ -391,47 +733,60 @@ def get_summary_by_celex_id(celex_id: str, language: str = "en") -> dict:
     }
 
 
-def get_data_by_celex_id(celex_id: str, language: str = "en") -> dict:
+def get_data_by_celex_id(celex_id: str, lang: str = "en") -> dict:
     """
     Only support English for now
     """
 
+    global url
+    global language
+    language = lang
     url = f"https://eur-lex.europa.eu/legal-content/{language}/TXT/HTML/?uri=CELEX:{celex_id}"
     table_url = f"https://eur-lex.europa.eu/legal-content/{language}/ALL/?uri=CELEX:{celex_id}"
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'lxml')
 
-    if celex_id[5:7] == "PC":
-        return parse_pc_soup_data(soup)
-    else:
+    if language == 'EN':
+        if celex_id[5:7] == "PC":
+            return parse_pc_soup_data(soup)
+        else:
 
-        # Parse relationship between documents
-        # Modifies
+            # Parse relationship between documents
+            # Modifies
 
-        # table id="relatedDocsTbMS"
-        # table id="relatedDocsTb"
+            # table id="relatedDocsTbMS"
+            # table id="relatedDocsTb"
 
-        modifies_documents = extract_related_documents(celex_id, language, 'relatedDocsTbMS')
-        modified_by_documents = extract_related_documents(celex_id, language, 'relatedDocsTb')
+            modifies_documents = extract_related_documents(celex_id, language, 'relatedDocsTbMS')
+            modified_by_documents = extract_related_documents(celex_id, language, 'relatedDocsTb')
 
-        preamble = parse_pbl(soup)
-        articles = parse_articles(soup)
-        article_notes = [note for article in articles for note in article["notes"]]
-        article_references = [ref for article in articles for ref in article["references"]]
+            preamble = parse_pbl(soup)
+            articles = parse_articles(soup)
+            article_notes = [note for article in articles for note in article["notes"]]
+            article_references = [ref for article in articles for ref in article["references"]]
 
-        return {
-            'title': parse_title(soup),
-            'preamble': preamble,
-            'articles': articles,
-            'final_part': parse_fnp(soup),
-            'notes': preamble["notes"] + article_notes,
-            'references': list(dict.fromkeys(preamble["references"] + article_references)),
-            'annexes': parse_annexes(soup),
-            'summary': get_summary_by_celex_id(celex_id, language),
-            'related_documents': {
-                'modifies': modifies_documents,
-                'modified_by': modified_by_documents
+            return {
+                'title': parse_title(soup),
+                'preamble': preamble,
+                'articles': articles,
+                'final_part': parse_fnp(soup),
+                'notes': preamble["notes"] + article_notes,
+                'references': list(dict.fromkeys(preamble["references"] + article_references)),
+                'annexes': parse_annexes(soup),
+                'summary': get_summary_by_celex_id(celex_id, language),
+                'related_documents': {
+                    'modifies': modifies_documents,
+                    'modified_by': modified_by_documents
+                }
             }
+    elif language == 'DE':
+        preamble = parse_pbl(soup)
+        enacting_terms = parse_enacting_terms(soup)
+        annexes = parse_annexes(soup)
+        return {
+            'preamble': preamble,
+            'enacting_terms': enacting_terms,
+            'annexes': annexes,
         }
 
 
