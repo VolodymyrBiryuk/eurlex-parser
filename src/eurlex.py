@@ -17,7 +17,6 @@ from utils import (
     detect_language
 )
 
-warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 language = ''
 
 # The preamble always opens with these sentences, depending on the language
@@ -124,7 +123,7 @@ def parse_pbl(soup):
         try:
             tags = soup.find('div', {'id': 'docHtml'}).find_all(recursive=False)
         except AttributeError:
-            tags = soup.find_all(recursive=False)
+            tags = soup.find('body').find_all(recursive=False)
         for tag in tags:
             try:
                 if 'ti-art' in tag.attrs['class']:
@@ -251,7 +250,7 @@ def parse_annexes(soup) -> list:
         try:
             tags = soup.find('div', {'id': 'docHtml'}).find_all(recursive=False)
         except AttributeError:
-            tags = soup.find_all(recursive=False)
+            tags = soup.find('body').find_all(recursive=False)
         for document_tag in tags:
             tag_name = document_tag.name
             tag_class = document_tag.get('class', '')
@@ -459,7 +458,7 @@ def parse_enacting_terms(soup):
         try:
             tags = soup.find('div', {'id': 'docHtml'}).find_all(recursive=False)
         except AttributeError:
-            tags = soup.find_all(recursive=False)
+            tags = soup.find('body').find_all(recursive=False)
         for tag in tags:
             doc = deepcopy(doc_template)
             tag_name = tag.name
@@ -756,8 +755,10 @@ def get_data_by_celex_id(celex_id: str, lang: str = "en") -> dict:
     url = f"https://eur-lex.europa.eu/legal-content/{language}/TXT/HTML/?uri=CELEX:{celex_id}"
     table_url = f"https://eur-lex.europa.eu/legal-content/{language}/ALL/?uri=CELEX:{celex_id}"
     response = requests.get(url)
-    with open('markup_celex_de_download.html', 'w') as file:
+    with open(f'{celex_id}.html', 'w') as file:
         file.write(response.text)
+
+    warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
     soup = BeautifulSoup(response.text, 'lxml')
 
     if language == 'EN':
