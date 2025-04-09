@@ -1,21 +1,24 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
-VERSION = '0.0.13'  
-DESCRIPTION  = 'Eurlex parser for fetching and parsing Eurlex data.'
+VERSION = '0.0.13'
+DESCRIPTION = 'Eurlex parser for fetching and parsing Eurlex data.'
+
 
 def read_requirements():
     with open('requirements.txt') as req_file:
         return req_file.read().splitlines()
 
+
 def read_long_description():
     with open('README.md', encoding='utf-8') as readme_file:
         return readme_file.read()
 
+
 setup(
     name='eurlex-parser',
     version=VERSION,
-    packages=[''],    
-    package_dir={'': 'src'},    
+    packages=[''],
+    package_dir={'': 'src'},
     include_package_data=True,
     install_requires=read_requirements(),
     description=DESCRIPTION,
@@ -31,6 +34,6 @@ setup(
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: Microsoft :: Windows",
     ],
-    
+
     python_requires='>=3.6',
 )
